@@ -1,15 +1,15 @@
 CREATE DATABASE eleve;
 USE eleve;
 
-CREATE TABLE USUARIO (
-    id_usuario INT PRIMARY KEY AUTO_INCREMENT,
+CREATE TABLE usuario (
+    id INT PRIMARY KEY AUTO_INCREMENT,
     nome VARCHAR(100) NOT NULL,
     email VARCHAR(256) NOT NULL UNIQUE,
     senha VARCHAR(100) NOT NULL
 );
 
-CREATE TABLE CLIENTE (
-    id_cliente INT PRIMARY KEY AUTO_INCREMENT,
+CREATE TABLE cliente (
+    id INT PRIMARY KEY AUTO_INCREMENT,
     nome VARCHAR(100) NOT NULL,
     num_celular CHAR(11) NOT NULL,
     cep CHAR(8) NOT NULL,
@@ -17,95 +17,95 @@ CREATE TABLE CLIENTE (
     complemento VARCHAR(100)
 );
 
-CREATE TABLE PACOTE (
-    id_pacote INT PRIMARY KEY AUTO_INCREMENT,
+CREATE TABLE pacote (
+    id INT PRIMARY KEY AUTO_INCREMENT,
     tipo VARCHAR(9) NOT NULL
 );
 
-CREATE TABLE CLIENTE_PACOTE (
-    id_cliente_pacote INT PRIMARY KEY AUTO_INCREMENT,
-    fk_cliente INT,
-    fk_pacote INT,
+CREATE TABLE cliente_pacote (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    cliente_id INT NOT NULL,
+    pacote_id INT NOT NULL,
     data_expiracao DATETIME,
-    FOREIGN KEY (fk_cliente) REFERENCES CLIENTE(id_cliente),
-    FOREIGN KEY (fk_pacote) REFERENCES PACOTE(id_pacote)
+    FOREIGN KEY (cliente_id) REFERENCES cliente(id),
+    FOREIGN KEY (pacote_id) REFERENCES pacote(id)
 );
 
-CREATE TABLE RACA (
-    id_raca INT PRIMARY KEY AUTO_INCREMENT,
+CREATE TABLE raca (
+    id INT PRIMARY KEY AUTO_INCREMENT,
     nome VARCHAR(100) NOT NULL
 );
 
-CREATE TABLE PET (
-    id_pet INT PRIMARY KEY AUTO_INCREMENT,
-    fk_cliente INT,
-    fk_raca INT,
+CREATE TABLE pet (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    cliente_id INT NOT NULL,
+    raca_id INT NOT NULL,
     nome VARCHAR(100) NOT NULL,
-    FOREIGN KEY (fk_cliente) REFERENCES CLIENTE(id_cliente),
-    FOREIGN KEY (fk_raca) REFERENCES RACA(id_raca)
+    FOREIGN KEY (cliente_id) REFERENCES cliente(id),
+    FOREIGN KEY (raca_id) REFERENCES raca(id)
 );
 
-CREATE TABLE SERVICO (
-    id_servico INT PRIMARY KEY AUTO_INCREMENT,
+CREATE TABLE servico (
+    id INT PRIMARY KEY AUTO_INCREMENT,
     nome VARCHAR(100) NOT NULL,
     valor_base FLOAT NOT NULL
 );
 
-CREATE TABLE AGENDA (
-    id_agenda INT PRIMARY KEY AUTO_INCREMENT,
-    fk_pet INT,
+CREATE TABLE agenda (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    pet_id INT NOT NULL,
     data_hora_inicio DATETIME NOT NULL,
     data_hora_fim DATETIME NOT NULL,
-    FOREIGN KEY (fk_pet) REFERENCES PET(id_pet)
+    FOREIGN KEY (pet_id) REFERENCES pet(id)
 );
 
-CREATE TABLE AGENDA_SERVICO (
-    id_agenda_servico INT PRIMARY KEY AUTO_INCREMENT,
-    fk_agenda INT,
-    fk_servico INT,
+CREATE TABLE agenda_servico (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    agenda_id INT NOT NULL,
+    servico_id INT NOT NULL,
     valor FLOAT NOT NULL,
-    FOREIGN KEY (fk_agenda) REFERENCES AGENDA(id_agenda),
-    FOREIGN KEY (fk_servico) REFERENCES SERVICO(id_servico)
+    FOREIGN KEY (agenda_id) REFERENCES agenda(id),
+    FOREIGN KEY (servico_id) REFERENCES servico(id)
 );
 
-CREATE TABLE CATEGORIA_DESPESAS (
-    id_categoria_despesas INT PRIMARY KEY AUTO_INCREMENT,
+CREATE TABLE categoria_despesa (
+    id INT PRIMARY KEY AUTO_INCREMENT,
     nome VARCHAR(100) NOT NULL
 );
 
-CREATE TABLE PRODUTO (
-    id_produto INT PRIMARY KEY AUTO_INCREMENT,
-    fk_categoria_despesas INT,
+CREATE TABLE produto (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    categoria_despesa_id INT NOT NULL,
     nome VARCHAR(100) NOT NULL,
-    FOREIGN KEY (fk_categoria_despesas) REFERENCES CATEGORIA_DESPESAS(id_categoria_despesas)
+    FOREIGN KEY (categoria_despesa_id) REFERENCES categoria_despesa(id)
 );
 
-CREATE TABLE DESPESAS (
-    id_despesas INT PRIMARY KEY AUTO_INCREMENT,
-    fk_produto INT,
+CREATE TABLE despesa (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    produto_id INT NOT NULL,
     valor FLOAT NOT NULL,
     data DATETIME NOT NULL,
-    FOREIGN KEY (fk_produto) REFERENCES PRODUTO(id_produto)
+    FOREIGN KEY (produto_id) REFERENCES produto(id)
 );
 
 -- Usuário admin
-INSERT INTO USUARIO (nome, email, senha)
-VALUES ('######', '################', '#######');
+INSERT INTO usuario (nome, email, senha)
+VALUES ('Admin', 'admin@email.com', 'Admin');
 
 -- Pacotes
-INSERT INTO PACOTE (tipo)
+INSERT INTO pacote (tipo)
 VALUES ('Quinzenal'), ('Mensal');
 
 -- Raças
-INSERT INTO RACA (nome)
+INSERT INTO raca (nome)
 VALUES ('Poodle'), ('Golden Retriever'), ('Shih Tzu'), ('Bulldog'), ('Labrador');
 
 -- Categorias de despesas
-INSERT INTO CATEGORIA_DESPESAS (nome)
-VALUES ('Gastos fixos'), ('Manutenção'), ('Insumos'), ('Produtos');
+INSERT INTO categoria_despesa (nome)
+VALUES ('Gasto fixo'), ('Manutenção'), ('Insumo'), ('Produto');
 
 -- Serviços
-INSERT INTO SERVICO (nome, valor_base)
+INSERT INTO servico (nome, valor_base)
 VALUES 
     ('Banho', 40.00),
     ('Tosa', 50.00),
@@ -113,75 +113,74 @@ VALUES
 
 -- Seleciona todos os pets com seus respectivos donos e raças
 SELECT 
-    PET.nome AS nome_pet,
-    CLIENTE.nome AS nome_cliente,
-    RACA.nome AS raca
-FROM PET
-JOIN CLIENTE ON PET.fk_cliente = CLIENTE.id_cliente
-JOIN RACA ON PET.fk_raca = RACA.id_raca;
+    pet.nome AS nome_pet,
+    cliente.nome AS nome_cliente,
+    raca.nome AS raca
+FROM pet
+JOIN cliente ON pet.cliente_id = cliente.id
+JOIN raca ON pet.raca_id = raca.id;
 
 -- Exibe todos os agendamentos com nome do pet, dono e horários
 SELECT 
-    AGENDA.id_agenda,
-    CLIENTE.nome AS cliente,
-    PET.nome AS pet,
-    AGENDA.data_hora_inicio,
-    AGENDA.data_hora_fim
-FROM AGENDA
-JOIN PET ON AGENDA.fk_pet = PET.id_pet
-JOIN CLIENTE ON PET.fk_cliente = CLIENTE.id_cliente;
+    agenda.id AS id_agenda,
+    cliente.nome AS cliente,
+    pet.nome AS pet,
+    agenda.data_hora_inicio,
+    agenda.data_hora_fim
+FROM agenda
+JOIN pet ON agenda.pet_id = pet.id
+JOIN cliente ON pet.cliente_id = cliente.id;
 
 -- Mostra todos os serviços realizados em agendamentos, com valores cobrados
 SELECT 
-    AGENDA.id_agenda,
-    CLIENTE.nome AS cliente,
-    PET.nome AS pet,
-    SERVICO.nome AS servico,
-    AGENDA_SERVICO.valor AS valor_final,
-    AGENDA.data_hora_inicio
-FROM AGENDA_SERVICO
-JOIN AGENDA ON AGENDA_SERVICO.fk_agenda = AGENDA.id_agenda
-JOIN PET ON AGENDA.fk_pet = PET.id_pet
-JOIN CLIENTE ON PET.fk_cliente = CLIENTE.id_cliente
-JOIN SERVICO ON AGENDA_SERVICO.fk_servico = SERVICO.id_servico;
+    agenda.id AS id_agenda,
+    cliente.nome AS cliente,
+    pet.nome AS pet,
+    servico.nome AS servico,
+    agenda_servico.valor AS valor_final,
+    agenda.data_hora_inicio
+FROM agenda_servico
+JOIN agenda ON agenda_servico.agenda_id = agenda.id
+JOIN pet ON agenda.pet_id = pet.id
+JOIN cliente ON pet.cliente_id = cliente.id
+JOIN servico ON agenda_servico.servico_id = servico.id;
 
 -- Lista todas as despesas, produtos relacionados e categorias
 SELECT 
-    DESPESAS.id_despesas,
-    PRODUTO.nome AS produto,
-    CATEGORIA_DESPESAS.nome AS categoria,
-    DESPESAS.valor,
-    DESPESAS.data
-FROM DESPESAS
-JOIN PRODUTO ON DESPESAS.fk_produto = PRODUTO.id_produto
-JOIN CATEGORIA_DESPESAS ON PRODUTO.fk_categoria_despesas = CATEGORIA_DESPESAS.id_categoria_despesas;
+    despesa.id AS id_despesa,
+    produto.nome AS produto,
+    categoria_despesa.nome AS categoria,
+    despesa.valor,
+    despesa.data
+FROM despesa
+JOIN produto ON despesa.produto_id = produto.id
+JOIN categoria_despesa ON produto.categoria_despesa_id = categoria_despesa.id;
 
 -- Mostra quais clientes têm pacotes e quando eles expiram
 SELECT 
-    CLIENTE.nome AS cliente,
-    PACOTE.tipo AS tipo_pacote,
-    CLIENTE_PACOTE.data_expiracao
-FROM CLIENTE_PACOTE
-JOIN CLIENTE ON CLIENTE_PACOTE.fk_cliente = CLIENTE.id_cliente
-JOIN PACOTE ON CLIENTE_PACOTE.fk_pacote = PACOTE.id_pacote;
+    cliente.nome AS cliente,
+    pacote.tipo AS tipo_pacote,
+    cliente_pacote.data_expiracao
+FROM cliente_pacote
+JOIN cliente ON cliente_pacote.cliente_id = cliente.id
+JOIN pacote ON cliente_pacote.pacote_id = pacote.id;
 
 -- Lista todos os serviços disponíveis no sistema e seus valores base
 SELECT 
     nome AS servico,
     valor_base
-FROM SERVICO;
+FROM servico;
 
 -- Lista todos os produtos e suas categorias
 SELECT 
-    PRODUTO.nome AS produto,
-    CATEGORIA_DESPESAS.nome AS categoria
-FROM PRODUTO
-JOIN CATEGORIA_DESPESAS ON PRODUTO.fk_categoria_despesas = CATEGORIA_DESPESAS.id_categoria_despesas;
+    produto.nome AS produto,
+    categoria_despesa.nome AS categoria
+FROM produto
+JOIN categoria_despesa ON produto.categoria_despesa_id = categoria_despesa.id;
 
 -- Mostra os pets e a raça associada a cada um
 SELECT 
-    PET.nome AS pet,
-    RACA.nome AS raca
-FROM PET
-JOIN RACA ON PET.fk_raca = RACA.id_raca;
-
+    produto.nome AS produto,
+    categoria_despesa.nome AS categoria
+FROM produto
+JOIN categoria_despesa ON produto.categoria_despesa_id = categoria_despesa.id;
