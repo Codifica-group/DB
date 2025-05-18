@@ -26,7 +26,8 @@ CREATE TABLE cliente_pacote (
     id INT PRIMARY KEY AUTO_INCREMENT,
     cliente_id INT NOT NULL,
     pacote_id INT NOT NULL,
-    data_expiracao DATETIME,
+    data_inicio DATE,
+    data_expiracao DATE,
     FOREIGN KEY (cliente_id) REFERENCES cliente(id),
     FOREIGN KEY (pacote_id) REFERENCES pacote(id)
 );
@@ -184,3 +185,5 @@ SELECT
     categoria_despesa.nome AS categoria
 FROM produto
 JOIN categoria_despesa ON produto.categoria_despesa_id = categoria_despesa.id;
+
+-- DROP DATABASE eleve; --
