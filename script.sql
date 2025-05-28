@@ -26,15 +26,27 @@ CREATE TABLE cliente_pacote (
     id INT PRIMARY KEY AUTO_INCREMENT,
     cliente_id INT NOT NULL,
     pacote_id INT NOT NULL,
+<<<<<<< HEAD
+    data_inicio DATETIME,
+    data_expiracao DATETIME,
+=======
     data_inicio DATE,
     data_expiracao DATE,
+>>>>>>> 82679b7b3fa0cfe91d93675facf33e402161d288
     FOREIGN KEY (cliente_id) REFERENCES cliente(id),
     FOREIGN KEY (pacote_id) REFERENCES pacote(id)
 );
 
+CREATE TABLE porte (
+	id INT PRIMARY KEY AUTO_INCREMENT,
+    nome CHAR(7) NOT NULL
+);
+
 CREATE TABLE raca (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    nome VARCHAR(100) NOT NULL
+    porte_id INT NOT NULL,
+    nome VARCHAR(100) NOT NULL,
+    FOREIGN KEY (porte_id) REFERENCES porte(id)
 );
 
 CREATE TABLE pet (
@@ -57,6 +69,7 @@ CREATE TABLE agenda (
     pet_id INT NOT NULL,
     data_hora_inicio DATETIME NOT NULL,
     data_hora_fim DATETIME NOT NULL,
+    valor FLOAT NOT NULL,
     FOREIGN KEY (pet_id) REFERENCES pet(id)
 );
 
@@ -64,21 +77,21 @@ CREATE TABLE agenda_servico (
     id INT PRIMARY KEY AUTO_INCREMENT,
     agenda_id INT NOT NULL,
     servico_id INT NOT NULL,
-    valor FLOAT NOT NULL,
+    concluido BOOLEAN NOT NULL DEFAULT FALSE,
     FOREIGN KEY (agenda_id) REFERENCES agenda(id),
     FOREIGN KEY (servico_id) REFERENCES servico(id)
 );
 
-CREATE TABLE categoria_despesa (
+CREATE TABLE categoria_produto (
     id INT PRIMARY KEY AUTO_INCREMENT,
     nome VARCHAR(100) NOT NULL
 );
 
 CREATE TABLE produto (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    categoria_despesa_id INT NOT NULL,
+    categoria_produto_id INT NOT NULL,
     nome VARCHAR(100) NOT NULL,
-    FOREIGN KEY (categoria_despesa_id) REFERENCES categoria_despesa(id)
+    FOREIGN KEY (categoria_produto_id) REFERENCES categoria_produto(id)
 );
 
 CREATE TABLE despesa (
@@ -97,13 +110,20 @@ VALUES ('Admin', 'admin@email.com', 'Admin');
 INSERT INTO pacote (tipo)
 VALUES ('Quinzenal'), ('Mensal');
 
+-- Porte
+INSERT INTO porte (nome)
+VALUES ('Pequeno'), ('Médio'), ('Grande');  
+
 -- Raças
-INSERT INTO raca (nome)
-VALUES ('Poodle'), ('Golden Retriever'), ('Shih Tzu'), ('Bulldog'), ('Labrador');
+INSERT INTO raca (nome, porte_id)
+VALUES ('Poodle', 1), ('Golden Retriever', 3), ('Shih Tzu', 2), ('Bulldog', 1), ('Labrador', 3);
 
 -- Categorias de despesas
-INSERT INTO categoria_despesa (nome)
+INSERT INTO categoria_produto (nome)
 VALUES ('Gasto fixo'), ('Manutenção'), ('Insumo'), ('Produto');
+
+INSERT INTO produto (nome, categoria_produto_id)
+VALUES ('aluguel', 1);
 
 -- Serviços
 INSERT INTO servico (nome, valor_base)
@@ -138,7 +158,7 @@ SELECT
     cliente.nome AS cliente,
     pet.nome AS pet,
     servico.nome AS servico,
-    agenda_servico.valor AS valor_final,
+    agenda.valor AS valor_final,
     agenda.data_hora_inicio
 FROM agenda_servico
 JOIN agenda ON agenda_servico.agenda_id = agenda.id
@@ -150,12 +170,12 @@ JOIN servico ON agenda_servico.servico_id = servico.id;
 SELECT 
     despesa.id AS id_despesa,
     produto.nome AS produto,
-    categoria_despesa.nome AS categoria,
+    categoria_produto.nome AS categoria,
     despesa.valor,
     despesa.data
 FROM despesa
 JOIN produto ON despesa.produto_id = produto.id
-JOIN categoria_despesa ON produto.categoria_despesa_id = categoria_despesa.id;
+JOIN categoria_produto ON produto.categoria_produto_id = categoria_produto.id;
 
 -- Mostra quais clientes têm pacotes e quando eles expiram
 SELECT 
@@ -175,15 +195,27 @@ FROM servico;
 -- Lista todos os produtos e suas categorias
 SELECT 
     produto.nome AS produto,
-    categoria_despesa.nome AS categoria
+    categoria_produto.nome AS categoria
 FROM produto
-JOIN categoria_despesa ON produto.categoria_despesa_id = categoria_despesa.id;
+JOIN categoria_produto ON produto.categoria_produto_id = categoria_produto.id;
 
 -- Mostra os pets e a raça associada a cada um
 SELECT 
     produto.nome AS produto,
-    categoria_despesa.nome AS categoria
+    categoria_produto.nome AS categoria
 FROM produto
+<<<<<<< HEAD
+JOIN categoria_produto ON produto.categoria_produto_id = categoria_produto.id;
+
+SELECT * FROM usuario;
+
+SELECT * FROM raca;
+
+SELECT * FROM produto;
+
+SELECT * FROM categoria_produto;
+=======
 JOIN categoria_despesa ON produto.categoria_despesa_id = categoria_despesa.id;
 
 -- DROP DATABASE eleve; --
+>>>>>>> 82679b7b3fa0cfe91d93675facf33e402161d288
