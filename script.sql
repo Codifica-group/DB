@@ -13,7 +13,10 @@ CREATE TABLE cliente (
     nome VARCHAR(100) NOT NULL,
     num_celular CHAR(11) NOT NULL,
     cep CHAR(8) NOT NULL,
+    rua VARCHAR(100),
     num_endereco VARCHAR(10),
+    bairro VARCHAR(50),
+    cidade VARCHAR(50),
     complemento VARCHAR(100)
 );
 
@@ -62,6 +65,7 @@ CREATE TABLE servico (
 CREATE TABLE agenda (
     id INT PRIMARY KEY AUTO_INCREMENT,
     pet_id INT NOT NULL,
+    valor_deslocamento FLOAT NOT NULL,
     data_hora_inicio DATETIME NOT NULL,
     data_hora_fim DATETIME NOT NULL,
     FOREIGN KEY (pet_id) REFERENCES pet(id)
