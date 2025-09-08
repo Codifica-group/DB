@@ -11,7 +11,7 @@ CREATE TABLE usuario (
 CREATE TABLE cliente (
     id INT PRIMARY KEY AUTO_INCREMENT,
     nome VARCHAR(100) NOT NULL,
-    num_celular CHAR(11) NOT NULL,
+    telefone CHAR(11) NOT NULL,
     cep CHAR(8) NOT NULL,
     rua VARCHAR(100),
     num_endereco VARCHAR(10),
@@ -102,7 +102,7 @@ CREATE TABLE despesa (
 
 -- Usuário admin
 INSERT INTO usuario (nome, email, senha)
-VALUES ('Admin', 'admin@email.com', 'Admin');
+VALUES ('Admin', 'admin@email.com', '$2a$10$8Kyvnk7du1AY6Yk1FrZILOsWtWcp4Hr79qNTux2xGRi6ODgxura0C');
 
 -- Pacotes
 INSERT INTO pacote (tipo)
@@ -189,9 +189,9 @@ VALUES
 -- Serviços
 INSERT INTO servico (nome, valor_base)
 VALUES 
-    ('Banho', 50.00),
-    ('Tosa', 60.00),
-    ('Hidratação', 20.00);
+    ('Banho', 35.00),
+    ('Tosa', 50.00),
+    ('Hidratação', 15.00);
 
 -- Seleciona todos os pets com seus respectivos donos e raças
 SELECT 
@@ -274,3 +274,7 @@ SELECT * FROM raca;
 SELECT * FROM produto;
 
 SELECT * FROM categoria_produto;
+
+SELECT * FROM cliente;
+
+SELECT * FROM pet;
