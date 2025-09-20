@@ -80,6 +80,25 @@ CREATE TABLE agenda_servico (
     FOREIGN KEY (servico_id) REFERENCES servico(id)
 );
 
+CREATE TABLE solicitacao_agenda (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    pet_id INT NOT NULL,
+    valor_deslocamento FLOAT,
+    data_hora_inicio DATETIME NOT NULL,
+    status VARCHAR(20) NOT NULL,
+    data_hora_solicitacao DATETIME NOT NULL,
+    FOREIGN KEY (pet_id) REFERENCES pet(id)
+);
+
+CREATE TABLE solicitacao_agenda_servico (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    solicitacao_agenda_id INT NOT NULL,
+    servico_id INT NOT NULL,
+    valor FLOAT,
+    FOREIGN KEY (solicitacao_agenda_id) REFERENCES solicitacao_agenda(id),
+    FOREIGN KEY (servico_id) REFERENCES servico(id)
+);
+
 CREATE TABLE categoria_produto (
     id INT PRIMARY KEY AUTO_INCREMENT,
     nome VARCHAR(100) NOT NULL
@@ -202,30 +221,39 @@ FROM pet
 JOIN cliente ON pet.cliente_id = cliente.id
 JOIN raca ON pet.raca_id = raca.id;
 
--- Exibe todos os agendamentos com nome do pet, dono e horários
-SELECT 
+-- Mostra todas Agendas com Cliente, Pet, Serviços e valor total
+SELECT
     agenda.id AS id_agenda,
     cliente.nome AS cliente,
     pet.nome AS pet,
+    GROUP_CONCAT(servico.nome SEPARATOR ', ') AS servicos,
+    (SUM(agenda_servico.valor) + agenda.valor_deslocamento) AS valor_total,
     agenda.data_hora_inicio,
     agenda.data_hora_fim
 FROM agenda
-JOIN pet ON agenda.pet_id = pet.id
-JOIN cliente ON pet.cliente_id = cliente.id;
-
--- Mostra todos os serviços realizados em agendamentos, com valores cobrados
-SELECT 
-    agenda.id AS id_agenda,
-    cliente.nome AS cliente,
-    pet.nome AS pet,
-    servico.nome AS servico,
-    agenda_servico.valor AS valor_final,
-    agenda.data_hora_inicio
-FROM agenda_servico
-JOIN agenda ON agenda_servico.agenda_id = agenda.id
+JOIN agenda_servico ON agenda.id = agenda_servico.agenda_id
+JOIN servico ON agenda_servico.servico_id = servico.id
 JOIN pet ON agenda.pet_id = pet.id
 JOIN cliente ON pet.cliente_id = cliente.id
-JOIN servico ON agenda_servico.servico_id = servico.id;
+GROUP BY agenda.id;
+
+-- Exibe todos solicitações de agendamentos e seus respectivos status
+SELECT
+    solicitacao_agenda.id AS id_agenda,
+    status,
+    cliente.nome AS cliente,
+    pet.nome AS pet,
+    GROUP_CONCAT(servico.nome SEPARATOR ', ') AS servicos,
+    SUM(solicitacao_agenda_servico.valor) AS valor_servicos,
+    solicitacao_agenda.valor_deslocamento,
+    solicitacao_agenda.data_hora_inicio,
+    solicitacao_agenda.data_hora_solicitacao
+FROM solicitacao_agenda
+JOIN solicitacao_agenda_servico ON solicitacao_agenda.id = solicitacao_agenda_servico.solicitacao_agenda_id
+JOIN servico ON solicitacao_agenda_servico.servico_id = servico.id
+JOIN pet ON solicitacao_agenda.pet_id = pet.id
+JOIN cliente ON pet.cliente_id = cliente.id
+GROUP BY solicitacao_agenda.id;
 
 -- Lista todas as despesas, produtos relacionados e categorias
 SELECT 
