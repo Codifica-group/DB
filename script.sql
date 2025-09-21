@@ -238,7 +238,7 @@ JOIN pet ON agenda.pet_id = pet.id
 JOIN cliente ON pet.cliente_id = cliente.id
 GROUP BY agenda.id;
 
--- Exibe todos solicitações de agendamentos e seus respectivos status
+-- Exibe todos solicitações de agendamentos com Cliente, Pet, Serviços, valor total, data/hora da solicitação e status
 SELECT
     solicitacao_agenda.id AS id_agenda,
     status,
@@ -277,20 +277,7 @@ FROM cliente_pacote
 JOIN cliente ON cliente_pacote.cliente_id = cliente.id
 JOIN pacote ON cliente_pacote.pacote_id = pacote.id;
 
--- Lista todos os serviços disponíveis no sistema e seus valores base
-SELECT 
-    nome AS servico,
-    valor_base
-FROM servico;
-
 -- Lista todos os produtos e suas categorias
-SELECT 
-    produto.nome AS produto,
-    categoria_produto.nome AS categoria
-FROM produto
-JOIN categoria_produto ON produto.categoria_produto_id = categoria_produto.id;
-
--- Mostra os pets e a raça associada a cada um
 SELECT 
     produto.nome AS produto,
     categoria_produto.nome AS categoria
