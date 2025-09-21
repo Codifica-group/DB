@@ -85,6 +85,7 @@ CREATE TABLE solicitacao_agenda (
     pet_id INT NOT NULL,
     valor_deslocamento FLOAT,
     data_hora_inicio DATETIME NOT NULL,
+    data_hora_fim DATETIME,
     status VARCHAR(20) NOT NULL,
     data_hora_solicitacao DATETIME NOT NULL,
     FOREIGN KEY (pet_id) REFERENCES pet(id)
@@ -247,6 +248,7 @@ SELECT
     SUM(solicitacao_agenda_servico.valor) AS valor_servicos,
     solicitacao_agenda.valor_deslocamento,
     solicitacao_agenda.data_hora_inicio,
+    solicitacao_agenda.data_hora_fim,
     solicitacao_agenda.data_hora_solicitacao
 FROM solicitacao_agenda
 JOIN solicitacao_agenda_servico ON solicitacao_agenda.id = solicitacao_agenda_servico.solicitacao_agenda_id
