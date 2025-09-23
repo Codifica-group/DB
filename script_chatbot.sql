@@ -3,13 +3,14 @@ USE chatbot;
 
 CREATE TABLE chat (
     id INTEGER PRIMARY KEY,
-    passo_atual VARCHAR(255),
+    passo_atual VARCHAR(50),
     dados_contexto JSON,
     data_atualizacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 CREATE TABLE cliente (
-    id INTEGER PRIMARY KEY
+    id INTEGER PRIMARY KEY,
+    nome VARCHAR(50)
 );
 
 CREATE TABLE chat_cliente (
