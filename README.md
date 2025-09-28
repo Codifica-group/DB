@@ -44,7 +44,6 @@ O banco de dados **Chatbot** gerencia as interações do chatbot:
 |---|---|
 | `chat` | Armazena o estado atual e o contexto de cada conversa |
 | `cliente` | Identificador do cliente |
-| `chat_cliente` | Relaciona uma conversa a um cliente específico |
 
 ---
 
@@ -58,7 +57,7 @@ Os arquivos SQL contêm:
     - População inicial de tabelas como: `usuario` (com um admin), `pacote`, `porte`, `raca`, `categoria_produto`, `produto` e `servico`.
 - **script_chatbot.sql**:
     - Criação do banco `chatbot`.
-    - Criação das tabelas `chat`, `cliente` e `chat_cliente`.
+    - Criação das tabelas `chat` e `cliente`.
 
 ---
 
@@ -72,3 +71,4 @@ Estão disponíveis nos scripts várias **queries SQL úteis**, como:
 - Despesas agrupadas por produto e categoria
 - Clientes com pacotes ativos e data de expiração
 - Produtos classificados por suas categorias
+- Estado do chat e seu respectivo cliente
