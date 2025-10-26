@@ -82,11 +82,12 @@ CREATE TABLE agenda_servico (
 
 CREATE TABLE solicitacao_agenda (
     id INT PRIMARY KEY AUTO_INCREMENT,
+    chat_id INT NOT NULL,
     pet_id INT NOT NULL,
     valor_deslocamento FLOAT,
     data_hora_inicio DATETIME NOT NULL,
     data_hora_fim DATETIME,
-    status VARCHAR(20) NOT NULL,
+    status VARCHAR(27) NOT NULL,
     data_hora_solicitacao DATETIME NOT NULL,
     FOREIGN KEY (pet_id) REFERENCES pet(id)
 );
@@ -138,6 +139,8 @@ VALUES
   -- Pequeno
   ('Boston Terrier', 1),
   ('Bulldog Francês', 1),
+  ('Bulldog Inglês', 1),
+  ('Bulldog', 1),
   ('Chihuahua', 1),
   ('Salsicha', 1),
   ('Spitz Alemão', 1),
@@ -147,10 +150,10 @@ VALUES
   ('Poodle', 1),
   ('Shih Tzu', 1),
   ('Yorkshire', 1),
-  ('Buldogue Inglês', 1),
   ('Pug' , 1),
   
   -- Médio
+  ('Caramelo', 2),
   ('Beagle', 2),
   ('Cocker Spaniel', 2),
   ('Fox Terrier', 2),
@@ -171,6 +174,7 @@ VALUES
   ('Labrador', 3),
   ('Pastor Alemão', 3),
   ('Pastor Belga', 3),
+  ('Pastor Suíço', 3),
   ('Rottweiler', 3),
   ('São Bernardo', 3),
   ('Husky Siberiano', 3),

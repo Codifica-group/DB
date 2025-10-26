@@ -2,12 +2,12 @@ CREATE DATABASE chatbot;
 USE chatbot;
 
 CREATE TABLE cliente (
-    id INTEGER PRIMARY KEY,
+    id INTEGER PRIMARY KEY AUTO_INCREMENT,
     nome VARCHAR(50)
 );
 
 CREATE TABLE chat (
-    id INTEGER PRIMARY KEY,
+    id INTEGER PRIMARY KEY AUTO_INCREMENT,
     passo_atual VARCHAR(50),
     dados_contexto JSON,
     data_atualizacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -23,4 +23,4 @@ SELECT
     cliente.id AS cliente_id,
     cliente.nome AS cliente_nome
 FROM chat
-JOIN cliente ON chat.cliente_id = cliente.id;
+LEFT JOIN cliente ON chat.cliente_id = cliente.id;
